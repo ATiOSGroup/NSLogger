@@ -100,6 +100,17 @@ extern "C" {
     
 NSLOGGER_IGNORE_NULLABILITY_BEGIN
 
+@interface ConsoleLogger : NSObject
+	
+typedef void (^LogModifyBlock)(NSMutableDictionary*);
+	
+@property (copy, nullable) LogModifyBlock modifyBlock;
+	
++(instancetype) shareInstance;
++(void)LogConvertedConsole:(Logger *)logger from:(NSString*)output message:(NSString *)message;
+	
+@end
+	
 // Set the default logger which will be the one used when passing NULL for logge
 extern void LoggerSetDefaultLogger(Logger *aLogger) NSLOGGER_NOSTRIP;
 

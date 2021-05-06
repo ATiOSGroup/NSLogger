@@ -1210,7 +1210,7 @@ static void LoggerLogFromConsole(CFStringRef tag, int fd, int outfd, CFMutableDa
 				for (unsigned i = 0; i < consoleGrabbersListLength; i++)
 				{
 					if (consoleGrabbersList[i] != NULL)
-						LogMessageRawToF(consoleGrabbersList[i], NULL, 0, NULL, (NSString *)tag, 0, (NSString *)message);
+						[ConsoleLogger LogConvertedConsole:consoleGrabbersList[i] from:(NSString *)tag message:(NSString *)message];
 				}
 				CFRelease(message);
 			}
@@ -1226,6 +1226,30 @@ static void LoggerLogFromConsole(CFStringRef tag, int fd, int outfd, CFMutableDa
 		}
 	}
 }
+
+@implementation ConsoleLogger : NSObject
+
+static ConsoleLogger *instance = nil;
+
++ (instancetype) shareInstance
+{
+    static dispatch_once_t onceToken ;
+    dispatch_once(&onceToken, ^{
+        instance = [[self alloc] init] ;
+    }) ;
+
+    return instance ;
+}
+
++ (void)LogConvertedConsole:(Logger *)logger from:(NSString*)output message:(NSString *)message{
+    NSMutableDictionary *dict = [@{@"domain":output,@"level":@0,@"message":message} mutableCopy];
+    if ([ConsoleLogger shareInstance].modifyBlock != NULL){
+        [ConsoleLogger shareInstance].modifyBlock(dict);
+    }
+    LogMessageRawToF(logger, NULL, 0, NULL, dict[@"domain"], [(NSNumber*)dict[@"level"] intValue], dict[@"message"]);
+}
+
+@end
 
 static void *LoggerConsoleGrabThread(void *context)
 {
