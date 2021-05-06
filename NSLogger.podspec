@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'NSLogger'
-  s.version  = '1.9.7.2'
+  s.version  = '1.9.7.3'
   s.license  = 'BSD'
   s.summary  = 'A modern, flexible logging tool.'
   s.homepage = 'https://github.com/fpillet/NSLogger'
@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
   #
   s.subspec 'ObjC' do |ss|
     ss.source_files = 'Client/iOS/*.{h,m}'
-    ss.public_header_files = 'Client/iOS/PublicHeaders/*.h'
+    #ss.public_header_files = 'Client/iOS/PublicHeaders/*.h'
     ss.ios.frameworks = 'CFNetwork', 'SystemConfiguration', 'UIKit'
     ss.osx.frameworks = 'CFNetwork', 'SystemConfiguration', 'CoreServices', 'AppKit'
     ss.xcconfig = {
